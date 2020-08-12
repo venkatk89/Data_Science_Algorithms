@@ -9,20 +9,20 @@ library(xgboost)
 
 # load data
 
-x_train <- read.csv("C:/Users/VENKATESH K/Desktop/flu_shot_learning/data/training_set_features.csv")
-y_train <- read.csv("C:/Users/VENKATESH K/Desktop/flu_shot_learning/data/training_set_labels.csv")
-
-
-x_test <- read.csv("C:/Users/VENKATESH K/Desktop/flu_shot_learning/data/test_set_features.csv")
-submission <- read.csv("C:/Users/VENKATESH K/Desktop/flu_shot_learning/data/submission_format.csv")
+x_train <- read.csv("training_set_features.csv")
+y_train <- read.csv("training_set_labels.csv")
+x_test <- read.csv("test_set_features.csv")
+submission <- read.csv("submission_format.csv")
 
 
 # merge train dataset
 train <- merge(x_train, y_train, by = "respondent_id")
 
+
 # convert all columns (including dependent variables) to categorical variables
 train <- sapply(train, as.factor)
 train <- as.data.frame(train)
+
 
 # change dependent variables (also id) to numeric variable
 train$respondent_id <- as.numeric(train$respondent_id)
@@ -32,7 +32,6 @@ train$seasonal_vaccine <- as.numeric(train$seasonal_vaccine)
 
 # all changes done to train dataset is also done to test dataset
 test_id <- x_test$respondent_id
-
 x_test <- sapply(x_test, as.factor)
 x_test <- as.data.frame(x_test)
 x_test$respondent_id <- test_id
@@ -40,15 +39,12 @@ x_test$respondent_id <- test_id
 
 
 # features segregation (based on the details availabe in problem description)
-
 h1n1_features <- c("h1n1_concern", "h1n1_knowledge" ,
                    "doctor_recc_h1n1", "opinion_h1n1_vacc_effective",
                    "opinion_h1n1_risk", "opinion_h1n1_sick_from_vacc")
 
 seasflu_features <- c("doctor_recc_seasonal", "opinion_seas_vacc_effective",
                       "opinion_seas_risk", "opinion_seas_sick_from_vacc")
-
-
 
 behavioral_features <- c("behavioral_antiviral_meds", "behavioral_avoidance",
                          "behavioral_face_mask", "behavioral_wash_hands" ,
@@ -57,8 +53,6 @@ behavioral_features <- c("behavioral_antiviral_meds", "behavioral_avoidance",
 
 health_features <- c("chronic_med_condition", "child_under_6_months", 
                      "health_worker", "health_insurance")
-
-
 
 demo_features <- c("age_group"  ,"education" ,"race" ,"sex" ,"income_poverty" ,
                    "marital_status" ,"rent_or_own" ,"employment_status" ,
@@ -71,10 +65,12 @@ demo_features <- c("age_group"  ,"education" ,"race" ,"sex" ,"income_poverty" ,
 # variables to use to predict h1n1 vaccination
 h1n1_vars <- c(h1n1_features, behavioral_features, health_features, demo_features)
 
+
 # variables to use to predict seasonal flu vaccination
 seasflu_vars <- c(seasflu_features, behavioral_features, health_features, demo_features)
 
 
+# making seperate datasets (not advisable if running end to end)
 h1n1_train <- train[,h1n1_vars]
 h1n1_y <- as.numeric(train$h1n1_vaccine) - 1
 h1n1_test <- x_test[,h1n1_vars]
@@ -83,9 +79,7 @@ sesflu_train <- train[,seasflu_vars]
 seasflu_y <- as.numeric(train$seasonal_vaccine) - 1
 seasflu_test <- x_test[,seasflu_vars]
 
-
 factor_features <- c(behavioral_features, demo_features, h1n1_features, health_features, seasflu_features)
-
 
 
 
@@ -93,9 +87,6 @@ factor_features <- c(behavioral_features, demo_features, h1n1_features, health_f
 # NA are considered seperate levels
 h1n1_train_1h <- one_hot(as.data.table(h1n1_train))
 seasflu_train_1h <- one_hot(as.data.table(sesflu_train))
-
-
-
 
 
 
@@ -115,13 +106,8 @@ h1n1_xgb_1 <- xgboost(data = data.matrix(h1n1_train_1h),
                       verbose = 1
 )
 
-
-
 importance_matrix <- xgb.importance(colnames(data.matrix(h1n1_train_1h)), model = h1n1_xgb_1)
 xgb.plot.importance(importance_matrix, rel_to_first = TRUE, xlab = "Relative importance", top_n = 20)
-
-
-
 
 
 
@@ -141,29 +127,21 @@ seasflu_xgb_1 <- xgboost(data = data.matrix(seasflu_train_1h),
                          verbose = 1
 )
 
-
 importance_matrix <- xgb.importance(colnames(data.matrix(seasflu_train_1h)), model = seasflu_xgb_1)
 xgb.plot.importance(importance_matrix, rel_to_first = TRUE, xlab = "Relative importance", top_n = 20)
 
 
 
-
-
-
-
 # prediction
-
 h1n1_test_1h <- one_hot(as.data.table(h1n1_test))
 seasflu_test_1h <- one_hot(as.data.table(seasflu_test))
-
 
 
 h1n1_pred <- predict(h1n1_xgb_1, as.matrix(h1n1_test_1h))
 seasflu_pred <- predict(seasflu_xgb_1, as.matrix(seasflu_test_1h))
 
 
-
-
+# formatting submission file
 submission$respondent_id <- test_id
 submission$h1n1_vaccine <- h1n1_pred
 submission$seasonal_vaccine <- seasflu_pred
