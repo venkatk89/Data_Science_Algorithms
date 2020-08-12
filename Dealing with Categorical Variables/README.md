@@ -7,6 +7,7 @@ Common ML/DL algorithms can be employed to deal with categorical variables. In t
 * Neural Networks
 * Attentional Factorization Machine
 * Neural Factorization Machine
+<br>
 **P.S:** These are only few of the possible approaches. There are numerous alternates available. I've specifically touched upon these as each of these model utilize different types of encoding for categorical variables.
 
 <br>
@@ -14,4 +15,6 @@ Common ML/DL algorithms can be employed to deal with categorical variables. In t
 
 
 The data used in this project is from the competition hosted in Driven Data. It can be accessed in the following link:
-https://www.drivendata.org/competitions/66/flu-shot-learning/ -automatic!
+https://www.drivendata.org/competitions/66/flu-shot-learning/ 
+
+
