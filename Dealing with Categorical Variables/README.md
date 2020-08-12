@@ -1,6 +1,6 @@
 This folder contains different ways in which categorical variables can be used in data modelling techniques. <br>
 
-Common ML/DL algorithms can be employed to deal with categorical variables. In this repository, the following models were built to predict the dependent variables where all the independent variables are categorical in nature <br>
+Common ML/DL algorithms can be employed to deal with categorical variables. In this repository, the following models were built to predict the dependent variable, where all the independent variables are categorical in nature <br>
 * XGBOOST (One Hot Encoding)
 * LightGBM (One Level Encoding)
 * Factorization Machines (Embedding Vectors)
