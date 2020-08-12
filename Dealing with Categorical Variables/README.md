@@ -4,17 +4,19 @@ Common ML/DL algorithms can be employed to deal with categorical variables. In t
 * XGBOOST (One Hot Encoding)
 * LightGBM (One Level Encoding)
 * Factorization Machines (Embedding Vectors)
-* Neural Networks
+* Neural Networks (with embeddings as features)
 * Attentional Factorization Machine
 * Neural Factorization Machine
 <br>
-**P.S:** These are only few of the possible approaches. There are numerous alternates available. I've specifically touched upon these as each of these model utilize different types of encoding for categorical variables.
+These are only few of the possible approaches. There are numerous alternates available. I've specifically touched upon these as each of these model utilize different types of encoding for categorical variables.
 
 <br>
 <br>
 
 
-The data used in this project is from the competition hosted in Driven Data. It can be accessed in the following link:
+The data used in this project is from the competition hosted in Driven Data. It can be accessed in the following link: <br>
 https://www.drivendata.org/competitions/66/flu-shot-learning/ 
 
-
+<br>
+<br>
+**P.S:** Before running any jupyter notebooks, run the data_prep.R file
